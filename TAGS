@@ -1,0 +1,521 @@
+
+lib/command_deck.rb,262
+module CommandDeckCommandDeck5,0
+  class Error < StandardError; endError13,0
+  class Error < StandardError; endCommandDeck::Error13,0
+  def self.configurationconfiguration15,0
+  def self.configureconfigure19,0
+  def self.load_panels!load_panels!23,0
+
+lib/command_deck/version.rb,112
+module CommandDeckCommandDeck3,0
+  VERSION = "0.1.0"VERSION4,0
+  VERSION = "0.1.0"CommandDeck::VERSION4,0
+
+lib/command_deck/registry.rb,1936
+module CommandDeckCommandDeck1,0
+  class RegistryRegistry2,0
+  class RegistryCommandDeck::Registry2,0
+    Action = Struct.new(:title, :key, :params, :block, keyword_init: true)Action3,0
+    Action = Struct.new(:title, :key, :params, :block, keyword_init: true)CommandDeck::Registry::Action3,0
+    Tab    = Struct.new(:title, :actions, keyword_init: true)Tab4,0
+    Tab    = Struct.new(:title, :actions, keyword_init: true)CommandDeck::Registry::Tab4,0
+    Panel  = Struct.new(:title, :tabs, keyword_init: true)Panel5,0
+    Panel  = Struct.new(:title, :tabs, keyword_init: true)CommandDeck::Registry::Panel5,0
+      def panels = (@panels ||= [])panels8,0
+      def panel(title, &blk) = PanelBuilder.new(title).tap { _1.instance_eval(&blk) }.build.then { panels << _1 }panel9,0
+      def find_action(key)find_action11,0
+    class PanelBuilderPanelBuilder17,0
+    class PanelBuilderCommandDeck::Registry::PanelBuilder17,0
+      def initialize(title) = (@title = titleinitialize18,0
+      def tab(title, &blk) = (@tabs << TabBuilder.new(title).tap { _1.instance_eval(&blk) }.build)tab21,0
+      def build = Panel.new(title: @title, tabs: @tabs)build22,0
+    class TabBuilderTabBuilder25,0
+    class TabBuilderCommandDeck::Registry::TabBuilder25,0
+      def initialize(title) = (@title = titleinitialize26,0
+      def action(title, key:, &blk)action29,0
+      def build = Tab.new(title: @title, actions: @actions)build33,0
+    class ActionBuilderActionBuilder36,0
+    class ActionBuilderCommandDeck::Registry::ActionBuilder36,0
+      def initialize(title, key)initialize37,0
+      def param(name, type, **opts) = (@params << { name: name, type: type, **opts })param44,0
+      def perform(&b) = (@block = b)perform45,0
+      def build = Action.new(title: @title, key: @key, params: @params, block: @block)build46,0
+  def self.panel(title, &blk) = Registry.panel(title, &blk)panel50,0
+
+lib/command_deck/executor.rb,207
+module CommandDeckCommandDeck1,0
+  class ExecutorExecutor2,0
+  class ExecutorCommandDeck::Executor2,0
+    def self.call(key:, params:, controller:)call3,0
+    def self.coerce(schema, raw)coerce9,0
+
+lib/command_deck/configuration.rb,329
+module CommandDeckCommandDeck1,0
+  class ConfigurationConfiguration2,0
+  class ConfigurationCommandDeck::Configuration2,0
+    attr_accessor :authorizeauthorize3,0
+    attr_accessor :authorizeauthorize=3,0
+    def initializeinitialize5,0
+  def self.configurationconfiguration10,0
+  def self.configureconfigure14,0
+
+lib/command_deck/engine.rb,136
+module CommandDeckCommandDeck1,0
+  class Engine < ::Rails::EngineEngine2,0
+  class Engine < ::Rails::EngineCommandDeck::Engine2,0
+
+lib/command_deck/railtie.rb,142
+module CommandDeckCommandDeck5,0
+  class Railtie < ::Rails::RailtieRailtie6,0
+  class Railtie < ::Rails::RailtieCommandDeck::Railtie6,0
+
+test/test_command_deck.rb,208
+class TestCommandDeck < Minitest::TestTestCommandDeck5,0
+  def test_that_it_has_a_version_numbertest_that_it_has_a_version_number6,0
+  def test_it_does_something_usefultest_it_does_something_useful10,0
+
+app/controllers/command_deck/base_controller.rb,314
+module CommandDeckCommandDeck1,0
+  class BaseController < ActionController::BaseBaseController2,0
+  class BaseController < ActionController::BaseCommandDeck::BaseController2,0
+    def authorize_command_deckauthorize_command_deck10,0
+    def current_user_for_command_deckcurrent_user_for_command_deck17,0
+
+app/controllers/command_deck/home_controller.rb,190
+module CommandDeckCommandDeck1,0
+  class HomeController < BaseControllerHomeController2,0
+  class HomeController < BaseControllerCommandDeck::HomeController2,0
+    def indexindex3,0
+
+app/controllers/command_deck/actions_controller.rb,204
+module CommandDeckCommandDeck1,0
+  class ActionsController < BaseControllerActionsController2,0
+  class ActionsController < BaseControllerCommandDeck::ActionsController2,0
+    def createcreate3,0
+
+app/controllers/command_deck/crud_controller.rb,246
+module CommandDeckCommandDeck1,0
+  class CrudController < BaseControllerCrudController2,0
+  class CrudController < BaseControllerCommandDeck::CrudController2,0
+    def indexindex3,0
+    def handle_error(message, status)handle_error24,0
+
+app/helpers/command_deck/application_helper.rb,202
+module CommandDeckCommandDeck3,0
+  module ApplicationHelperApplicationHelper4,0
+  module ApplicationHelperCommandDeck::ApplicationHelper4,0
+    def command_deck_launchercommand_deck_launcher7,0
+
+web-console/lib/web_console.rb,101
+module WebConsoleWebConsole6,0
+  def self.loggerlogger28,0
+  def self.deprecatordeprecator32,0
+
+web-console/lib/web_console/context.rb,390
+module WebConsoleWebConsole3,0
+  class ContextContext5,0
+  class ContextWebConsole::Context5,0
+    def initialize(binding)initialize6,0
+    def extract(input = nil)extract15,0
+      GLOBAL_OBJECTS = [GLOBAL_OBJECTS21,0
+      GLOBAL_OBJECTS = [WebConsole::Context::GLOBAL_OBJECTS21,0
+      def globalglobal30,0
+      def local(input)local34,0
+      def eval(cmd)eval41,0
+
+web-console/lib/web_console/errors.rb,269
+module WebConsoleWebConsole3,0
+  Error = Class.new(StandardError)Error5,0
+  Error = Class.new(StandardError)WebConsole::Error5,0
+  DoubleRenderError = Class.new(Error)DoubleRenderError8,0
+  DoubleRenderError = Class.new(Error)WebConsole::DoubleRenderError8,0
+
+web-console/lib/web_console/evaluator.rb,311
+module WebConsoleWebConsole3,0
+  class EvaluatorEvaluator9,0
+  class EvaluatorWebConsole::Evaluator9,0
+    cattr_reader :cleaner, default: begincleaner11,0
+    def initialize(binding = TOPLEVEL_BINDING)initialize17,0
+    def eval(input)eval21,0
+      def format_exception(exc)format_exception34,0
+
+web-console/lib/web_console/exception_mapper.rb,526
+module WebConsoleWebConsole3,0
+  class ExceptionMapperExceptionMapper4,0
+  class ExceptionMapperWebConsole::ExceptionMapper4,0
+    attr_reader :excexc5,0
+    def self.follow(exc)follow7,0
+    def self.find_binding(mappers, exception_object_id)find_binding17,0
+    def initialize(exception)initialize23,0
+    def firstfirst29,0
+    def [](index)[]33,0
+      def guess_binding_for_index(index)guess_binding_for_index39,0
+      def guess_the_first_application_bindingguess_the_first_application_binding49,0
+
+web-console/lib/web_console/extensions.rb,148
+module KernelKernel3,0
+  def console(binding = Bindex.current_bindings.second)console13,0
+class BindingBinding25,0
+  def consoleconsole31,0
+
+web-console/lib/web_console/injector.rb,190
+module WebConsoleWebConsole3,0
+  class InjectorInjector5,0
+  class InjectorWebConsole::Injector5,0
+    def initialize(body, headers)initialize6,0
+    def inject(content)inject15,0
+
+web-console/lib/web_console/interceptor.rb,162
+module WebConsoleWebConsole1,0
+  module InterceptorInterceptor2,0
+  module InterceptorWebConsole::Interceptor2,0
+    def self.call(request, error)call3,0
+
+web-console/lib/web_console/middleware.rb,1628
+module WebConsoleWebConsole5,0
+  class MiddlewareMiddleware6,0
+  class MiddlewareWebConsole::Middleware6,0
+    TEMPLATES_PATH = File.expand_path("../templates", __FILE__)TEMPLATES_PATH7,0
+    TEMPLATES_PATH = File.expand_path("../templates", __FILE__)WebConsole::Middleware::TEMPLATES_PATH7,0
+    cattr_accessor :mount_point, default: "/__web_console"mount_point9,0
+    cattr_accessor :mount_point, default: "/__web_console"mount_point=9,0
+    cattr_accessor :whiny_requests, default: truewhiny_requests10,0
+    cattr_accessor :whiny_requests, default: truewhiny_requests=10,0
+    def initialize(app)initialize12,0
+    def call(env)call16,0
+      def acceptable_content_type?(headers)acceptable_content_type?54,0
+      def json_response(opts = {})json_response58,0
+      def json_response_with_session(id, request, opts = {})json_response_with_session66,0
+      def create_regular_or_whiny_request(env)create_regular_or_whiny_request72,0
+      def repl_sessions_rerepl_sessions_re77,0
+      def update_reupdate_re81,0
+      def binding_change_rebinding_change_re85,0
+      def id_for_repl_session_update(request)id_for_repl_session_update89,0
+      def id_for_repl_session_stack_frame_change(request)id_for_repl_session_stack_frame_change95,0
+      def update_repl_session(id, request)update_repl_session101,0
+      def change_stack_trace(id, request)change_stack_trace111,0
+      def respond_with_unavailable_session(id)respond_with_unavailable_session119,0
+      def respond_with_unacceptable_requestrespond_with_unacceptable_request125,0
+      def call_app(env)call_app131,0
+
+web-console/lib/web_console/permissions.rb,670
+module WebConsoleWebConsole5,0
+  class PermissionsPermissions6,0
+  class PermissionsWebConsole::Permissions6,0
+    ALWAYS_PERMITTED_NETWORKS = %w( 127.0.0.0/8 ::1 ::ffff:127.0.0.0/104 )ALWAYS_PERMITTED_NETWORKS8,0
+    ALWAYS_PERMITTED_NETWORKS = %w( 127.0.0.0/8 ::1 ::ffff:127.0.0.0/104 )WebConsole::Permissions::ALWAYS_PERMITTED_NETWORKS8,0
+    def initialize(networks = nil)initialize10,0
+    def include?(network)include?14,0
+    def to_sto_s20,0
+      def normalize_networks(networks)normalize_networks26,0
+      def coerce_network_to_ipaddr(network)coerce_network_to_ipaddr30,0
+      def human_readable_ipaddr(ipaddr)human_readable_ipaddr38,0
+
+web-console/lib/web_console/railtie.rb,200
+module WebConsoleWebConsole5,0
+  class Railtie < ::Rails::RailtieRailtie6,0
+  class Railtie < ::Rails::RailtieWebConsole::Railtie6,0
+    def web_console_permissionsweb_console_permissions63,0
+
+web-console/lib/web_console/request.rb,659
+module WebConsoleWebConsole3,0
+  class Request < ActionDispatch::RequestRequest4,0
+  class Request < ActionDispatch::RequestWebConsole::Request4,0
+    cattr_accessor :permissions, default: Permissions.newpermissions5,0
+    cattr_accessor :permissions, default: Permissions.newpermissions=5,0
+    def permitted?permitted?7,0
+    def strict_remote_ipstrict_remote_ip11,0
+      class GetSecureIp < ActionDispatch::RemoteIp::GetIpGetSecureIp19,0
+      class GetSecureIp < ActionDispatch::RemoteIp::GetIpWebConsole::Request::GetSecureIp19,0
+        def initialize(req, proxies)initialize20,0
+        def filter_proxies(ips)filter_proxies31,0
+
+web-console/lib/web_console/session.rb,514
+module WebConsoleWebConsole3,0
+  class SessionSession13,0
+  class SessionWebConsole::Session13,0
+    cattr_reader :inmemory_storage, default: {}inmemory_storage14,0
+      def find(id)find21,0
+      def from(storage)from32,0
+    attr_reader :idid42,0
+    def initialize(exception_mappers)initialize44,0
+    def eval(input)eval56,0
+    def switch_binding_to(index, exception_object_id)switch_binding_to63,0
+    def context(objpath)context70,0
+      def store_into_memorystore_into_memory76,0
+
+web-console/lib/web_console/source_location.rb,417
+module WebConsoleWebConsole3,0
+  class SourceLocationSourceLocation4,0
+  class SourceLocationWebConsole::SourceLocation4,0
+    def initialize(binding)initialize5,0
+      def path() @binding.source_location.first endpath10,0
+      def lineno() @binding.source_location.last endlineno11,0
+      def path() @binding.eval("__FILE__") endpath13,0
+      def lineno() @binding.eval("__LINE__") endlineno14,0
+
+web-console/lib/web_console/template.rb,416
+module WebConsoleWebConsole3,0
+  class TemplateTemplate8,0
+  class TemplateWebConsole::Template8,0
+    cattr_accessor :template_paths, default: [ File.expand_path("../templates", __FILE__) ]template_paths10,0
+    cattr_accessor :template_paths, default: [ File.expand_path("../templates", __FILE__) ]template_paths=10,0
+    def initialize(env, session)initialize12,0
+    def render(template)render19,0
+
+web-console/lib/web_console/testing/erb_precompiler.rb,348
+module WebConsoleWebConsole6,0
+  module TestingTesting7,0
+  module TestingWebConsole::Testing7,0
+    class ERBPrecompilerERBPrecompiler9,0
+    class ERBPrecompilerWebConsole::Testing::ERBPrecompiler9,0
+      def initialize(path)initialize10,0
+      def buildbuild17,0
+      def method_missing(name, *args, &block)method_missing21,0
+
+web-console/lib/web_console/testing/fake_middleware.rb,622
+module WebConsoleWebConsole8,0
+  module TestingTesting9,0
+  module TestingWebConsole::Testing9,0
+    class FakeMiddlewareFakeMiddleware10,0
+    class FakeMiddlewareWebConsole::Testing::FakeMiddleware10,0
+      DEFAULT_HEADERS = { Rack::CONTENT_TYPE => "application/javascript" }DEFAULT_HEADERS13,0
+      DEFAULT_HEADERS = { Rack::CONTENT_TYPE => "application/javascript" }WebConsole::Testing::FakeMiddleware::DEFAULT_HEADERS13,0
+      def initialize(opts)initialize15,0
+      def call(env)call21,0
+      def viewview28,0
+        def req_path(env)req_path35,0
+        def render(template)render39,0
+
+web-console/lib/web_console/testing/helper.rb,219
+module WebConsoleWebConsole3,0
+  module TestingTesting4,0
+  module TestingWebConsole::Testing4,0
+    module HelperHelper5,0
+    module HelperWebConsole::Testing::Helper5,0
+      def self.gem_rootgem_root6,0
+
+web-console/lib/web_console/version.rb,109
+module WebConsoleWebConsole3,0
+  VERSION = "4.2.1"VERSION4,0
+  VERSION = "4.2.1"WebConsole::VERSION4,0
+
+web-console/lib/web_console/view.rb,438
+module WebConsoleWebConsole3,0
+  class View < ActionView::BaseView4,0
+  class View < ActionView::BaseWebConsole::View4,0
+    def only_on_error_page(*args)only_on_error_page9,0
+    def only_on_regular_page(*args)only_on_regular_page14,0
+    def render_javascript(template)render_javascript23,0
+    def render_inlined_string(template)render_inlined_string33,0
+    def render(*)render41,0
+    def t(key, options = {})t54,0
+
+web-console/lib/web_console/whiny_request.rb,303
+module WebConsoleWebConsole3,0
+  class WhinyRequest < SimpleDelegatorWhinyRequest8,0
+  class WhinyRequest < SimpleDelegatorWebConsole::WhinyRequest8,0
+    def permitted?permitted?9,0
+      def whine_unless(condition)whine_unless18,0
+      def loggerlogger25,0
+      def requestrequest29,0
+
+web-console/test/dummy/app/controllers/application_controller.rb,79
+class ApplicationController < ActionController::BaseApplicationController3,0
+
+web-console/test/dummy/app/controllers/controller_helper_test_controller.rb,118
+class ControllerHelperTestController < ApplicationControllerControllerHelperTestController3,0
+  def indexindex4,0
+
+web-console/test/dummy/app/controllers/exception_test_controller.rb,157
+class ExceptionTestController < ApplicationControllerExceptionTestController3,0
+  def indexindex4,0
+  def xhrxhr9,0
+  def test_methodtest_method13,0
+
+web-console/test/dummy/app/controllers/helper_error_controller.rb,100
+class HelperErrorController < ApplicationControllerHelperErrorController3,0
+  def indexindex4,0
+
+web-console/test/dummy/app/controllers/helper_test_controller.rb,98
+class HelperTestController < ApplicationControllerHelperTestController3,0
+  def indexindex4,0
+
+web-console/test/dummy/app/controllers/model_test_controller.rb,242
+class ModelTestController < ApplicationControllerModelTestController3,0
+  def indexindex4,0
+  class LocalModelLocalModel8,0
+  class LocalModelModelTestController::LocalModel8,0
+    def initializeinitialize9,0
+    def workwork13,0
+
+web-console/test/dummy/app/controllers/tests_controller.rb,293
+class TestsController < ApplicationControllerTestsController3,0
+  def render_console_ontop_of_textrender_console_ontop_of_text4,0
+  def renders_console_only_oncerenders_console_only_once9,0
+  def doesnt_render_console_on_non_html_requestsdoesnt_render_console_on_non_html_requests14,0
+
+web-console/test/dummy/app/helpers/application_helper.rb,47
+module ApplicationHelperApplicationHelper3,0
+
+web-console/test/dummy/config/application.rb,147
+module DummyDummy11,0
+  class Application < Rails::ApplicationApplication12,0
+  class Application < Rails::ApplicationDummy::Application12,0
+
+web-console/test/support/scenarios/bad_custom_error_scenario.rb,343
+module WebConsoleWebConsole3,0
+  class BadCustomErrorScenarioBadCustomErrorScenario4,0
+  class BadCustomErrorScenarioWebConsole::BadCustomErrorScenario4,0
+    class Error < StandardErrorError5,0
+    class Error < StandardErrorWebConsole::BadCustomErrorScenario::Error5,0
+      def initialize(*)initialize6,0
+    def callcall12,0
+
+web-console/test/support/scenarios/basic_nested_scenario.rb,216
+module WebConsoleWebConsole3,0
+  class BasicNestedScenarioBasicNestedScenario4,0
+  class BasicNestedScenarioWebConsole::BasicNestedScenario4,0
+    def callcall5,0
+      def raise_an_errorraise_an_error13,0
+
+web-console/test/support/scenarios/custom_error_scenario.rb,298
+module WebConsoleWebConsole3,0
+  class CustomErrorScenarioCustomErrorScenario4,0
+  class CustomErrorScenarioWebConsole::CustomErrorScenario4,0
+    Error = Class.new(StandardError)Error5,0
+    Error = Class.new(StandardError)WebConsole::CustomErrorScenario::Error5,0
+    def callcall7,0
+
+web-console/test/support/scenarios/eval_nested_scenario.rb,228
+module WebConsoleWebConsole3,0
+  class EvalNestedScenarioEvalNestedScenario4,0
+  class EvalNestedScenarioWebConsole::EvalNestedScenario4,0
+    def callcall5,0
+      def raise_an_error_in_evalraise_an_error_in_eval13,0
+
+web-console/test/support/scenarios/flat_scenario.rb,143
+module WebConsoleWebConsole3,0
+  class FlatScenarioFlatScenario4,0
+  class FlatScenarioWebConsole::FlatScenario4,0
+    def callcall5,0
+
+web-console/test/support/scenarios/reraised_scenario.rb,273
+module WebConsoleWebConsole3,0
+  class ReraisedScenarioReraisedScenario4,0
+  class ReraisedScenarioWebConsole::ReraisedScenario4,0
+    def callcall5,0
+      def raise_an_error_in_evalraise_an_error_in_eval13,0
+      def method_that_raisesmethod_that_raises19,0
+
+web-console/test/test_helper.rb,339
+module SilenceRailsDomTestingSilenceRailsDomTesting26,0
+  def assert_select(*)assert_select27,0
+module PlatformSpecificTestMacroPlatformSpecificTestMacro40,0
+  def test(name, options = {})test41,0
+def capture(stream)capture61,0
+alias silence capturesilence78,0
+module ExternalExternal87,0
+  def self.exceptionexception88,0
+
+web-console/test/web_console/context_test.rb,211
+module WebConsoleWebConsole5,0
+  class ContextTest < ActiveSupport::TestCaseContextTest6,0
+  class ContextTest < ActiveSupport::TestCaseWebConsole::ContextTest6,0
+      def context(b, o = "")context31,0
+
+web-console/test/web_console/evaluator_test.rb,577
+module WebConsoleWebConsole5,0
+  class EvaluatorTest < ActiveSupport::TestCaseEvaluatorTest6,0
+  class EvaluatorTest < ActiveSupport::TestCaseWebConsole::EvaluatorTest6,0
+    class TestError < StandardErrorTestError7,0
+    class TestError < StandardErrorWebConsole::EvaluatorTest::TestError7,0
+      def backtracebacktrace8,0
+    class BadlyDefinedError < StandardErrorBadlyDefinedError16,0
+    class BadlyDefinedError < StandardErrorWebConsole::EvaluatorTest::BadlyDefinedError16,0
+      def backtracebacktrace17,0
+      def current_tracecurrent_trace71,0
+
+web-console/test/web_console/exception_mapper_test.rb,201
+module WebConsoleWebConsole5,0
+  class ExceptionMapperTest < ActiveSupport::TestCaseExceptionMapperTest6,0
+  class ExceptionMapperTest < ActiveSupport::TestCaseWebConsole::ExceptionMapperTest6,0
+
+web-console/test/web_console/helper_test.rb,902
+module WebConsoleWebConsole5,0
+  class HelperTest < ActionDispatch::IntegrationTestHelperTest6,0
+  class HelperTest < ActionDispatch::IntegrationTestWebConsole::HelperTest6,0
+    class BaseApplicationBaseApplication7,0
+    class BaseApplicationWebConsole::HelperTest::BaseApplication7,0
+      def call(env)call8,0
+        def requestrequest14,0
+        def statusstatus18,0
+        def headersheaders22,0
+        def bodybody26,0
+    class SingleConsoleApplication < BaseApplicationSingleConsoleApplication40,0
+    class SingleConsoleApplication < BaseApplicationWebConsole::HelperTest::SingleConsoleApplication40,0
+      def call(env)call41,0
+    class MultipleConsolesApplication < BaseApplicationMultipleConsolesApplication50,0
+    class MultipleConsolesApplication < BaseApplicationWebConsole::HelperTest::MultipleConsolesApplication50,0
+      def call(env)call51,0
+
+web-console/test/web_console/injector_test.rb,173
+module WebConsoleWebConsole5,0
+  class InjectorTest < ActiveSupport::TestCaseInjectorTest6,0
+  class InjectorTest < ActiveSupport::TestCaseWebConsole::InjectorTest6,0
+
+web-console/test/web_console/integration_test.rb,185
+module WebConsoleWebConsole5,0
+  class IntegrationTest < ActiveSupport::TestCaseIntegrationTest6,0
+  class IntegrationTest < ActiveSupport::TestCaseWebConsole::IntegrationTest6,0
+
+web-console/test/web_console/interceptor_test.rb,262
+module WebConsoleWebConsole5,0
+  class InterceptorTest < ActionDispatch::IntegrationTestInterceptorTest6,0
+  class InterceptorTest < ActionDispatch::IntegrationTestWebConsole::InterceptorTest6,0
+    def generate_template_errorgenerate_template_error16,0
+
+web-console/test/web_console/middleware_test.rb,518
+module WebConsoleWebConsole5,0
+  class MiddlewareTest < ActionDispatch::IntegrationTestMiddlewareTest6,0
+  class MiddlewareTest < ActionDispatch::IntegrationTestWebConsole::MiddlewareTest6,0
+    class ApplicationApplication7,0
+    class ApplicationWebConsole::MiddlewareTest::Application7,0
+      def initialize(options = {})initialize8,0
+      def call(env)call13,0
+      def bodybody17,0
+        def statusstatus32,0
+        def headersheaders36,0
+      def raise_exceptionraise_exception258,0
+
+web-console/test/web_console/permissions_test.rb,221
+module WebConsoleWebConsole5,0
+  class PermissionsTest < ActiveSupport::TestCasePermissionsTest6,0
+  class PermissionsTest < ActiveSupport::TestCaseWebConsole::PermissionsTest6,0
+      def permit(*args)permit50,0
+
+web-console/test/web_console/request_test.rb,277
+module WebConsoleWebConsole5,0
+  class RequestTest < ActiveSupport::TestCaseRequestTest6,0
+  class RequestTest < ActiveSupport::TestCaseWebConsole::RequestTest6,0
+      def request(*args)request55,0
+      def mock_env(*args)mock_env59,0
+      def xhr(*args)xhr63,0
+
+web-console/test/web_console/session_test.rb,501
+module WebConsoleWebConsole5,0
+  class SessionTest < ActiveSupport::TestCaseSessionTest6,0
+  class SessionTest < ActiveSupport::TestCaseWebConsole::SessionTest6,0
+    class ValueAwareError < StandardErrorValueAwareError7,0
+    class ValueAwareError < StandardErrorWebConsole::SessionTest::ValueAwareError7,0
+      def self.raise(value)raise8,0
+      def self.raise_nested_error(value)raise_nested_error14,0
+      attr_reader :valuevalue21,0
+      def initialize(value)initialize23,0
+
+web-console/test/web_console/whiny_request_test.rb,227
+module WebConsoleWebConsole5,0
+  class WhinyRequestTest < ActiveSupport::TestCaseWhinyRequestTest6,0
+  class WhinyRequestTest < ActiveSupport::TestCaseWebConsole::WhinyRequestTest6,0
+      def request(*args)request24,0
