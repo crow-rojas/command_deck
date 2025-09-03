@@ -4,5 +4,7 @@ require_relative "command_deck/version"
 
 module CommandDeck
   class Error < StandardError; end
-  # Your code goes here...
 end
+
+# Load the Rails engine so middleware and routes are registered when the gem is required.
+require "command_deck/engine"
