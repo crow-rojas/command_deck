@@ -1,5 +1,14 @@
 AllCops:
   TargetRubyVersion: 3.0
+  NewCops: enable
+  Exclude:
+    - "web-console/**/*"
+    - "pkg/**/*"
+    - "vendor/**/*"
+    - "node_modules/**/*"
+    - "tmp/**/*"
+    - "public/**/*"
+    - "lib/command_deck/assets/**/*"
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes

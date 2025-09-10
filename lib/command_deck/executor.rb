@@ -30,7 +30,7 @@ module CommandDeck
       end
     end
 
-    def self.coerce_boolean(value)
+    def self.coerce_boolean(value) # rubocop:disable Naming/PredicateMethod
       boolean_true?(value)
     end
 
