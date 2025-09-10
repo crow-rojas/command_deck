@@ -23,10 +23,35 @@ module CommandDeck
 
     def self.coerce_value(type, value)
       case type
-      when :boolean then boolean_true?(value)
-      when :integer then integer_or_nil(value)
-      else
-        value&.to_s
+      when :boolean then coerce_boolean(value)
+      when :integer then coerce_integer(value)
+      when :selector then coerce_selector(value)
+      else coerce_string(value)
+      end
+    end
+
+    def self.coerce_boolean(value)
+      boolean_true?(value)
+    end
+
+    def self.coerce_integer(value)
+      integer_or_nil(value)
+    end
+
+    def self.coerce_selector(value)
+      return symbolize_keys_shallow(value) if value.is_a?(Hash)
+
+      value
+    end
+
+    def self.coerce_string(value)
+      value&.to_s
+    end
+
+    def self.symbolize_keys_shallow(hash)
+      hash.each_with_object({}) do |(k, v), out|
+        key = k.respond_to?(:to_sym) ? k.to_sym : k
+        out[key] = v
       end
     end
 

@@ -3,6 +3,7 @@
 # Minimal response body injector adapted from the web-console project (MIT License).
 # It safely appends content before </body> when present and adjusts Content-Length.
 module CommandDeck
+  # Tiny middleware that injects a tiny floating UI into HTML responses.
   class Injector
     def initialize(body, headers)
       @body = "".dup

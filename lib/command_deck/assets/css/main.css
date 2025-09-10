@@ -56,6 +56,7 @@
 #command-deck-panel.cd-theme-dark .cd-menu-item,
 #command-deck-panel.cd-theme-dark .cd-form input[type="text"],
 #command-deck-panel.cd-theme-dark .cd-form input[type="number"],
+#command-deck-panel.cd-theme-dark .cd-form select,
 #command-deck-panel.cd-theme-dark #cd-panel-selector select {
   background: #111; /* near-black */
   color: #eee;
@@ -237,7 +238,8 @@
 }
 
 .cd-form input[type="text"],
-.cd-form input[type="number"] {
+.cd-form input[type="number"],
+.cd-form select {
   width: 100%;
   box-sizing: border-box;
   padding: 8px 10px;
@@ -249,6 +251,47 @@
   display: flex;
   justify-content: flex-end;
   margin-top: 8px;
+}
+
+.cd-param-hint {
+  margin-top: 6px;
+  color: #666;
+  font-size: 12px;
+}
+
+.cd-badge {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-left: 4px;
+}
+
+.cd-badge.cd-on {
+  background: #e6f4ea;
+  color: #137333;
+  border: 1px solid #c8e6c9;
+}
+
+.cd-badge.cd-off {
+  background: #fde8e8;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+
+#command-deck-panel.cd-theme-dark .cd-param-hint { 
+    color: #bdbdbd;
+}
+#command-deck-panel.cd-theme-dark .cd-badge.cd-on { 
+    background: #0b2f1c; 
+    color: #a7f3d0; 
+    border-color: #065f46; 
+}
+#command-deck-panel.cd-theme-dark .cd-badge.cd-off { 
+    background: #3b0c0c; 
+    color: #fecaca; 
+    border-color: #7f1d1d; 
 }
 
 .cd-form .cd-run {

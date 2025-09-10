@@ -54,7 +54,7 @@ module CommandDeck
       private
 
       def slugify(str)
-        str.to_s.downcase.gsub(/[^a-z0-9]+/, '-').gsub(/^-|-$/,'')
+        str.to_s.downcase.gsub(/[^a-z0-9]+/, "-").gsub(/^-|-$/, "")
       end
     end
 
