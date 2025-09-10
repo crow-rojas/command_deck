@@ -6,7 +6,7 @@ module CommandDeck
   class Registry
     Action = Struct.new(:title, :key, :params, :block, keyword_init: true)
     Tab    = Struct.new(:title, :actions, keyword_init: true)
-    Panel  = Struct.new(:title, :tabs, keyword_init: true)
+    Panel  = Struct.new(:title, :tabs, :owner, :group, :key, keyword_init: true)
 
     class << self
       def panels
@@ -17,8 +17,8 @@ module CommandDeck
         @panels = []
       end
 
-      def panel(title, &blk)
-        PanelBuilder.new(title).tap { _1.instance_eval(&blk) }.build.then { panels << _1 }
+      def panel(title, **opts, &blk)
+        PanelBuilder.new(title, **opts).tap { _1.instance_eval(&blk) }.build.then { panels << _1 }
       end
 
       def find_action(key)
@@ -35,9 +35,12 @@ module CommandDeck
 
     # Panel builder
     class PanelBuilder
-      def initialize(title)
+      def initialize(title, **opts)
         @title = title
         @tabs = []
+        @owner = opts[:owner]
+        @group = opts[:group]
+        @key   = opts[:key] || slugify(title)
       end
 
       def tab(title, &blk)
@@ -45,7 +48,13 @@ module CommandDeck
       end
 
       def build
-        Panel.new(title: @title, tabs: @tabs)
+        Panel.new(title: @title, tabs: @tabs, owner: @owner, group: @group, key: @key)
+      end
+
+      private
+
+      def slugify(str)
+        str.to_s.downcase.gsub(/[^a-z0-9]+/, '-').gsub(/^-|-$/,'')
       end
     end
 
@@ -88,7 +97,7 @@ module CommandDeck
     end
   end
 
-  def self.panel(title, &blk)
-    Registry.panel(title, &blk)
+  def self.panel(title, **opts, &blk)
+    Registry.panel(title, **opts, &blk)
   end
 end

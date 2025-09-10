@@ -67,6 +67,19 @@
   border-color: #cfe0ff;
 }
 
+#cd-header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#cd-panel-selector select {
+  padding: 4px 8px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #fff;
+}
+
 #cd-settings-panel {
   position: absolute;
   top: 32px;

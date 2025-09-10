@@ -14,7 +14,13 @@ module CommandDeck
     end
 
     def serialize_panel(panel)
-      { title: panel.title, tabs: serialize_tabs(panel.tabs) }
+      {
+        key: panel.key,
+        title: panel.title,
+        owner: panel.owner,
+        group: panel.group,
+        tabs: serialize_tabs(panel.tabs)
+      }
     end
 
     def serialize_tabs(tabs)
