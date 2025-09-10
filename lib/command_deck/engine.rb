@@ -4,6 +4,7 @@ require "rails/engine"
 require_relative "middleware"
 
 module CommandDeck
+  # Rails engine for Command Deck
   class Engine < ::Rails::Engine
     isolate_namespace CommandDeck
 

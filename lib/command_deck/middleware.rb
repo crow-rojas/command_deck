@@ -47,9 +47,9 @@ module CommandDeck
     def overlay_snippet
       mp = self.class.mount_point
       <<~HTML
-        <!-- Command Deck assets -->
-        <link rel="stylesheet" href="#{mp}/assets/css.css" />
-        <script defer src="#{mp}/assets/js.js" data-mount="#{mp}"></script>
+        <!-- Command Deck assets (ESM) -->
+        <link rel="stylesheet" href="#{mp}/assets/css/main.css" />
+        <script type="module" src="#{mp}/assets/js/main.js" data-mount="#{mp}"></script>
         <!-- /Command Deck assets -->
       HTML
     end

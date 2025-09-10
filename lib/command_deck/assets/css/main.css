@@ -1,3 +1,8 @@
+/* ==========================================
+   Command Deck • main.css (scoped)
+   ========================================== */
+
+/* ---------- Base & Panel ---------- */
 #command-deck-toggle {
   position: fixed;
   z-index: 2147483000;
@@ -35,18 +40,18 @@
   font: 500 13px/1.35 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 }
 
-#command-deck-panel h4 {
-  margin: 0 0 8px;
-  font-size: 14px;
-}
-
-/* Header with title on left and settings on right */
+/* ---------- Header & Settings ---------- */
 #cd-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  position: relative; /* anchor for absolute settings panel */
+  position: relative;
+}
+
+#command-deck-panel h4 {
+  margin: 0 0 8px;
+  font-size: 14px;
 }
 
 #cd-settings-btn {
@@ -101,6 +106,7 @@
   border-color: #0d6efd;
 }
 
+/* ---------- Tabs & Actions ---------- */
 #cd-tabs-wrap {
   display: flex;
   gap: 6px;
@@ -169,14 +175,59 @@
   overflow: auto;
 }
 
+/* ---------- Corner Positioning ---------- */
+#command-deck-toggle.cd-pos-tl {
+  left: 16px;
+  right: auto;
+  top: 16px;
+  bottom: auto;
+}
 
-/* Corner positioning */
-#command-deck-toggle.cd-pos-tl { left: 16px; right: auto; top: 16px; bottom: auto; }
-#command-deck-toggle.cd-pos-tr { right: 16px; left: auto; top: 16px; bottom: auto; }
-#command-deck-toggle.cd-pos-bl { left: 16px; right: auto; bottom: 16px; top: auto; }
-#command-deck-toggle.cd-pos-br { right: 16px; left: auto; bottom: 16px; top: auto; }
+#command-deck-toggle.cd-pos-tr {
+  right: 16px;
+  left: auto;
+  top: 16px;
+  bottom: auto;
+}
 
-#command-deck-panel.cd-pos-tl { left: 16px; right: auto; top: 72px; bottom: auto; }
-#command-deck-panel.cd-pos-tr { right: 16px; left: auto; top: 72px; bottom: auto; }
-#command-deck-panel.cd-pos-bl { left: 16px; right: auto; bottom: 72px; top: auto; }
-#command-deck-panel.cd-pos-br { right: 16px; left: auto; bottom: 72px; top: auto; }
+#command-deck-toggle.cd-pos-bl {
+  left: 16px;
+  right: auto;
+  bottom: 16px;
+  top: auto;
+}
+
+#command-deck-toggle.cd-pos-br {
+  right: 16px;
+  left: auto;
+  bottom: 16px;
+  top: auto;
+}
+
+#command-deck-panel.cd-pos-tl {
+  left: 16px;
+  right: auto;
+  top: 72px;
+  bottom: auto;
+}
+
+#command-deck-panel.cd-pos-tr {
+  right: 16px;
+  left: auto;
+  top: 72px;
+  bottom: auto;
+}
+
+#command-deck-panel.cd-pos-bl {
+  left: 16px;
+  right: auto;
+  bottom: 72px;
+  top: auto;
+}
+
+#command-deck-panel.cd-pos-br {
+  right: 16px;
+  left: auto;
+  bottom: 72px;
+  top: auto;
+}

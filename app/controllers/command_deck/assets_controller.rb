@@ -4,19 +4,45 @@ module CommandDeck
   # Controller for serving assets
   class AssetsController < BaseController
     def js
-      path = asset_path("js.js")
-      send_data File.read(path), type: "application/javascript; charset=utf-8", disposition: "inline"
+      rel = params[:path].presence || "main"
+      ext = params[:format].presence || "js"
+      rel = "#{rel}.#{ext}" unless rel.end_with?(".#{ext}")
+      path = safe_asset_path("js", rel)
+      return head :not_found unless path && File.file?(path)
+
+      send_data File.binread(path), type: js_mime_for(path), disposition: "inline"
     end
 
     def css
-      path = asset_path("css.css")
-      send_data File.read(path), type: "text/css; charset=utf-8", disposition: "inline"
+      rel = params[:path].presence || "main"
+      ext = params[:format].presence || "css"
+      rel = "#{rel}.#{ext}" unless rel.end_with?(".#{ext}")
+      path = safe_asset_path("css", rel)
+      return head :not_found unless path && File.file?(path)
+
+      send_data File.binread(path), type: "text/css; charset=utf-8", disposition: "inline"
     end
 
     private
 
-    def asset_path(name)
-      File.expand_path(File.join(__dir__, "../../../lib/command_deck/assets", name))
+    def base_assets_root
+      @base_assets_root ||= File.expand_path(File.join(__dir__, "../../../lib/command_deck/assets"))
+    end
+
+    def safe_asset_path(kind, rel)
+      # Prevent traversal and restrict to known roots (js/ or css/)
+      rel = rel.to_s.sub(%r{^/+}, "")
+      rel = rel.gsub("..", "")
+      root = File.join(base_assets_root, kind)
+      full = File.expand_path(File.join(root, rel))
+      return nil unless full.start_with?(root)
+
+      full
+    end
+
+    def js_mime_for(*)
+      # All ESM served as application/javascript
+      "application/javascript; charset=utf-8"
     end
   end
 end
