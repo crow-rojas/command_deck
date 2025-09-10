@@ -48,7 +48,7 @@ module CommandDeck
         name: param[:name],
         type: param[:type].to_s,
         label: param[:label] || param[:name].to_s.tr("_", " ").capitalize,
-        required: (param.key?(:required) ? param[:required] : true)
+        required: (param.key?(:required) ? param[:required] : false)
       }
     end
   end

@@ -158,6 +158,12 @@
   color: #555;
 }
 
+.cd-form label .cd-required {
+  color: #d00;
+  margin-left: 4px;
+  font-weight: 700;
+}
+
 .cd-form input[type="text"],
 .cd-form input[type="number"] {
   width: 100%;
@@ -186,6 +192,21 @@
   color: #fff;
   cursor: pointer;
   font-size: 16px;
+}
+
+.cd-form .cd-run:hover:not(:disabled) {
+  background: #0b5ed7; /* darker */
+}
+
+.cd-form .cd-run:focus-visible {
+  outline: 2px solid #9ec5fe;
+  outline-offset: 2px;
+}
+
+.cd-form .cd-run:disabled,
+.cd-form .cd-run.loading {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 #command-deck-output {
