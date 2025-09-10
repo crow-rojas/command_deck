@@ -167,14 +167,25 @@
   border-radius: 6px;
 }
 
-.cd-form .cd-run {
+.cd-actions-row {
+  display: flex;
+  justify-content: flex-end;
   margin-top: 8px;
-  padding: 8px 10px;
+}
+
+.cd-form .cd-run {
+  width: 36px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
   border: 0;
   border-radius: 6px;
   background: #0d6efd;
   color: #fff;
   cursor: pointer;
+  font-size: 16px;
 }
 
 #command-deck-output {
