@@ -10,15 +10,16 @@ Gem::Specification.new do |spec|
 
   spec.summary = "Command Deck is a tiny floating UI that allows you to run commands in your Rails app."
   spec.description = "Command Deck is a tiny floating UI that allows you to run commands in your Rails app."
-  spec.homepage = "https://github.com/crowrojas/command_deck"
+  spec.homepage = "https://github.com/crow-rojas/command_deck"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.0.0"
 
   spec.metadata["allowed_push_host"] = "https://rubygems.org"
 
   spec.metadata["homepage_uri"] = spec.homepage
-  spec.metadata["source_code_uri"] = "https://github.com/crowrojas/command_deck"
-  spec.metadata["changelog_uri"] = "https://github.com/crowrojas/command_deck/blob/main/CHANGELOG.md"
+  spec.metadata["source_code_uri"] = "https://github.com/crow-rojas/command_deck"
+  spec.metadata["changelog_uri"] = "https://github.com/crow-rojas/command_deck/blob/master/CHANGELOG.md"
+  spec.metadata["rubygems_mfa_required"] = "true"
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.

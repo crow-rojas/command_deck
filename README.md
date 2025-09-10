@@ -1,80 +1,21 @@
-# CommandDeck
+# Command Deck
 
-TODO: Delete this and the text below, and describe your gem
+Command Deck is a tiny, dev-only Rails engine that gives you a floating panel to run custom actions and quick admin tasks without opening Rails console.
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/command_deck`. To experiment with that code, run `bin/console` for an interactive prompt.
+You define panels/tabs/actions in a minimal DSL. Each action can declare a few params (text, boolean, number, selector), run Ruby code, and return a JSON-ish result shown in the UI.
 
 ## Installation
 
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
-
-Install the gem and add to the application's Gemfile by executing:
-
-```bash
-bundle add UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
-```
-
-If bundler is not being used to manage dependencies, install the gem by executing:
-
-```bash
-gem install UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
-```
-
-## Usage
-
-TODO: Write usage instructions here
-
-## Development
-
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
-
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/command_deck. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/[USERNAME]/command_deck/blob/master/CODE_OF_CONDUCT.md).
-
-## License
-
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
-
-## Code of Conduct
-
-Everyone interacting in the CommandDeck project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/command_deck/blob/master/CODE_OF_CONDUCT.md).
-
-# Command Deck (Rails Gem)
-
-A tiny **dev‑only** Rails engine that gives you a quick **CRUD UI for any model** and a **simple command runner** (buttons/inputs) so you don’t have to open `rails console` for everyday tasks.
-
-> Scope for v0: **development only**, zero prod features, minimal DSL, fast to drop into any app.
-
----
-
-## ✨ What it does (v0)
-
-* **Model CRUD (fast)**: pick a model, list/create/update/destroy rows.
-* **Command Runner**: define tiny snippets as buttons with a couple of params.
-* **Dev‑only**: only mounts in `Rails.env.development?`.
-
-Examples it should handle out of the box:
-
-* `Buk::Feature.enable(:flag) / disable / enabled?`
-* `General.habilitar_omniauth` (read)
-* `General.find_or_initialize_by(nombre: "general").update!(valor: "true")`
-* Kick/retry jobs, toggle booleans, run small backfills on a scoped set.
-
----
-
-## 📦 Installation (dev only)
-
-Add the gem (local path while developing your own):
+Add the gem to your application:
 
 ```ruby
-# Gemfile
-gem "command_deck", path: "../command_deck" # or gem "command_deck"
+# Gemfile (development only recommended)
+group :development do
+  gem "command_deck"
+end
 ```
 
-Mount the engine only in dev:
+Mount the engine (dev only):
 
 ```ruby
 # config/routes.rb
@@ -83,236 +24,118 @@ if Rails.env.development?
 end
 ```
 
-Minimal initializer (optional in v0):
+Start your app and the floating panel should appear.
+
+## Define actions (DSL)
+
+Create Ruby files in `app/command_deck/**/*.rb`. Example:
 
 ```ruby
-# config/initializers/command_deck.rb
-CommandDeck.configure do |c|
-  c.authorize = ->(_user, _action) { true } # dev only, keep it wide open
-end
-```
+CommandDeck.panel "Utilities" do
+  tab "Demo" do
+    action "Greet", key: "utils.greet" do
+      param :name, :string, label: "Your name", required: true
 
----
-
-## 🧩 Minimal DSL (panels, tabs, actions)
-
-Create files under `app/command_deck/**/*.rb`.
-
-```ruby
-# app/command_deck/panels/buk_examples.rb
-CommandDeck.panel "Buk" do
-  tab "Features" do
-    action "Enable feature", key: "buk.features.enable" do
-      param :key, :string
-      perform { |p, _| { ok: Buk::Feature.enable(p[:key].to_sym) } }
+      perform do |p, _ctx|
+        { message: "Hello, #{p[:name]}!" }
+      end
     end
 
-    action "Disable feature", key: "buk.features.disable" do
-      param :key, :string
-      perform { |p, _| { ok: Buk::Feature.disable(p[:key].to_sym) } }
-    end
+    action "Pick a Color", key: "utils.color" do
+      # You can pass simple arrays, pairs, or hashes as choices
+      param :color, :selector,
+        options: [
+          ["Red",   "red"],
+          ["Green", "green"],
+          ["Blue",  "blue"]
+        ],
+        include_blank: true
 
-    action "Enabled?", key: "buk.features.enabled" do
-      param :key, :string
-      perform { |p, _| { enabled: Buk::Feature.enabled?(p[:key].to_sym) } }
-    end
-  end
-
-  tab "General" do
-    action "Mostrar omniauth", key: "buk.general.omniauth" do
-      perform { |_| { habilitado: General.habilitar_omniauth } }
-    end
-
-    action "Forzar general true", key: "buk.general.force_true" do
-      perform do |_p, _|
-        g = General.find_or_initialize_by(nombre: "general")
-        g.update!(valor: "true")
-        { id: g.id, valor: g.valor }
+      perform do |p, _ctx|
+        { chosen: p[:color] }
       end
     end
   end
 end
 ```
 
-**Param types in v0:** `:string`, `:boolean`, `:integer` (that’s it). More can come later.
+This will create a panel called "Utilities" with a tab called "Demo" and two actions: "Greet" and "Pick a Color".
 
----
+![Demo](public/img/demo.png)
 
-## 🧠 Execution model (v0)
+## DSL API
 
-* Runs inline in the app process.
-* Validates a tiny set of types; values passed to your `perform` block.
-* Returns a Ruby hash; rendered as pretty JSON in the UI.
-* No transactions/dry‑run in v0 (keep simple). Add later if needed.
-
----
-
-## 🔐 Security (v0)
-
-* Only mounts in `development`.
-* Authorization defaults to allow‑all. No CSRF/rate limits in v0.
-* Add proper gates later when/if you enable in staging/prod.
-
----
-
-## 🧱 Gem structure (super slim)
-
-```
-command_deck/
-  lib/command_deck.rb
-  lib/command_deck/engine.rb
-  lib/command_deck/railtie.rb
-  lib/command_deck/configuration.rb
-  lib/command_deck/registry.rb
-  lib/command_deck/executor.rb
-  app/controllers/command_deck/{base,home,actions,crud}_controller.rb
-  app/views/command_deck/{home/index,actions/_form,crud/index}.html.erb
-  config/routes.rb
-```
-
----
-
-## ⚙️ Core code (trimmed for v0)
+Define panels under `app/command_deck/**/*.rb`.
 
 ```ruby
-# lib/command_deck/railtie.rb
-module CommandDeck
-  class Railtie < ::Rails::Railtie
-    initializer "command_deck.load_panels", after: :load_config_initializers do
-      path = Rails.root.join("app/command_deck")
-      Dir[path.join("**/*.rb")].sort.each { |f| load f } if Dir.exist?(path)
-    end
-  end
-end
+CommandDeck.panel(title, owner: nil, group: nil, key: nil) { ... }
 ```
+
+Inside a panel, define tabs:
 
 ```ruby
-# lib/command_deck/registry.rb
-module CommandDeck
-  class Registry
-    Action = Struct.new(:title, :key, :params, :block, keyword_init: true)
-    Tab    = Struct.new(:title, :actions, keyword_init: true)
-    Panel  = Struct.new(:title, :tabs, keyword_init: true)
-
-    class << self
-      def panels = (@panels ||= [])
-      def panel(title, &blk); PanelBuilder.new(title).tap { _1.instance_eval(&blk) }.build.then { panels << _1 }; end
-      def find_action(key)
-        panels.each { |p| p.tabs.each { |t| t.actions.each { |a| return a if a.key == key } } }
-        nil
-      end
-    end
-
-    class PanelBuilder
-      def initialize(title) = (@title, @tabs = title, [])
-      def tab(title, &blk) = (@tabs << TabBuilder.new(title).tap { _1.instance_eval(&blk) }.build)
-      def build = Panel.new(title: @title, tabs: @tabs)
-    end
-
-    class TabBuilder
-      def initialize(title) = (@title, @actions = title, [])
-      def action(title, key:, &blk)
-        @actions << ActionBuilder.new(title, key).tap { _1.instance_eval(&blk) }.build
-      end
-      def build = Tab.new(title: @title, actions: @actions)
-    end
-
-    class ActionBuilder
-      def initialize(title, key)
-        @title, @key, @params, @block = title, key, [], nil
-      end
-      def param(name, type, **opts) = (@params << { name: name, type: type, **opts })
-      def perform(&b) = (@block = b)
-      def build = Action.new(title: @title, key: @key, params: @params, block: @block)
-    end
-  end
-
-  def self.panel(title, &blk) = Registry.panel(title, &blk)
-end
+tab(title) { ... }
 ```
+
+Inside a tab, define actions:
 
 ```ruby
-# lib/command_deck/executor.rb
-module CommandDeck
-  class Executor
-    def self.call(key:, params:, controller:)
-      action = Registry.find_action(key) or raise ArgumentError, "Unknown action #{key}"
-      coerced = coerce(action.params, params)
-      action.block.call(coerced, {}) # no ctx in v0
-    end
-
-    def self.coerce(schema, raw)
-      out = {}
-      schema.each do |p|
-        v = raw[p[:name].to_s]
-        v = (v == "1" || v == true) if p[:type] == :boolean
-        v = v.to_i if p[:type] == :integer
-        out[p[:name]] = v
-      end
-      out
-    end
-  end
-end
+action(title, key:) { ... }
 ```
+
+Inside an action, declare params and the code to run:
 
 ```ruby
-# config/routes.rb (inside gem)
-CommandDeck::Engine.routes.draw do
-  root to: "home#index"
-  resources :actions, only: [:create]
-  get ":model", to: "crud#index", as: :crud # /command_deck/User
-end
+param(name, type, **opts)
+perform { |params, ctx| ... }
 ```
 
-```ruby
-# app/controllers/command_deck/crud_controller.rb
-module CommandDeck
-  class CrudController < BaseController
-    def index
-      model = params[:model].classify.safe_constantize or raise ActiveRecord::RecordNotFound
-      @columns = model.columns.map(&:name)
-      @records = model.limit(50).order(model.primary_key => :desc)
-    end
-  end
-end
+Supported param types:
+
+- `:string` – free text input.
+- `:boolean` – checkbox; coerces to true/false.
+- `:integer` – number input; coerces to Integer or nil when blank.
+- `:selector` – dropdown. See options below.
+
+Common param options:
+
+- `label:` String – UI label. Defaults to a humanized `name`.
+- `required:` true/false – disables Run button until filled. Default: false.
+
+Selector-specific options:
+
+- `options:` Enumerable – static choices.
+- `collection:` -> Enumerable – dynamic choices (block is called each render).
+- `include_blank:` true/false – prepend an empty choice. Default: false.
+- `return:` `:value` (default), `:label`, or `:both` (`{ label:, value: }`).
+- Choice shapes accepted:
+  - Values: `%w[a b c]`
+  - Pairs: `[["Label A", "a"], ["Label B", "b"]]`
+  - Objects: `{ label:, value:, meta?: { ... } }`
+
+Action execution:
+
+- The block `perform { |params, ctx| ... }` receives your coerced params and a context hash (reserved for future use).
+- Return any object serializable to JSON (Hash recommended) to show it in the UI.
+
+## Security
+
+Command Deck is intended for development only. The engine mounts only in dev and skips CSRF by default. **DO NOT ENABLE IT IN PRODUCTION**.
+
+## Development
+
+Run tests and lint:
+
+```bash
+bundle install
+bundle exec rake test
+bundle exec rubocop
 ```
 
-```erb
-<!-- app/views/command_deck/crud/index.html.erb -->
-<h2>CRUD: <%= params[:model].classify %></h2>
-<table>
-  <thead>
-    <tr>
-      <% @columns.each { |c| %><th><%= c %></th><% } %>
-    </tr>
-  </thead>
-  <tbody>
-    <% @records.each do |r| %>
-      <tr>
-        <% @columns.each { |c| %><td><%= r.public_send(c) %></td><% } %>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-```
+## License
 
-```erb
-<!-- app/views/command_deck/actions/_form.html.erb (unchanged idea, minimal inputs) -->
-```
+MIT License. See `LICENSE.txt`.
 
----
+## Code of Conduct
 
-## 🧪 Testing tips (v0)
-
-* Smoke-test the mount path in dev.
-* Unit-test your action blocks as plain Ruby.
-
----
-
-## ✅ Roadmap (next)
-
-* Transactions + `dry_run` via SAVEPOINT
-* More field types (enum/model pickers)
-* CSV/JSON export
-* Small allowlist for CRUD models to avoid `constantize` footguns
-* Basic auth & CSRF so it can be enabled in staging if desired
+Everyone interacting in this project is expected to follow the [Code of Conduct](https://github.com/crow-rojas/command_deck/blob/master/CODE_OF_CONDUCT.md).
