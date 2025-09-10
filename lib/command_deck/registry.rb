@@ -97,7 +97,7 @@ module CommandDeck
     end
   end
 
-  def self.panel(title, **opts, &blk)
-    Registry.panel(title, **opts, &blk)
+  def self.panel(title, ...)
+    Registry.panel(title, ...)
   end
 end

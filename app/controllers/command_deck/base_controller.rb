@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
 module CommandDeck
+  # Base controller for the Command Deck engine.
+  #
+  # Dev-only: requests are guarded via `ensure_development!` and CSRF is skipped
+  # because forms are internal to the overlay UI and this engine is intended for
+  # development environments only.
   class BaseController < ActionController::Base
-    # POC: dev-only
     before_action :ensure_development!
-
-    # Simpler for the POC; we can wire CSRF later if needed.
     skip_forgery_protection
 
     private
