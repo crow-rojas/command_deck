@@ -18,7 +18,7 @@ module CommandDeck
       end
 
       def panel(title, **opts, &blk)
-        PanelBuilder.new(title, **opts).tap { _1.instance_eval(&blk) }.build.then { panels << _1 }
+        PanelBuilder.new(title, **opts).tap { |pb| pb.instance_eval(&blk) if blk }.build.then { panels << _1 }
       end
 
       def find_action(key)
@@ -44,7 +44,7 @@ module CommandDeck
       end
 
       def tab(title, &blk)
-        @tabs << TabBuilder.new(title).tap { _1.instance_eval(&blk) }.build
+        @tabs << TabBuilder.new(title).tap { |tb| tb.instance_eval(&blk) if blk }.build
       end
 
       def build
@@ -66,7 +66,7 @@ module CommandDeck
       end
 
       def action(title, key:, &blk)
-        @actions << ActionBuilder.new(title, key).tap { _1.instance_eval(&blk) }.build
+        @actions << ActionBuilder.new(title, key).tap { |ab| ab.instance_eval(&blk) if blk }.build
       end
 
       def build
