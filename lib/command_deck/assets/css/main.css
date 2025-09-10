@@ -21,6 +21,13 @@
   cursor: pointer;
 }
 
+/* Dark theme for toggle */
+#command-deck-toggle.cd-theme-dark {
+  background: #000; /* full black */
+  color: #fff;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, .6);
+}
+
 #command-deck-panel {
   position: fixed;
   z-index: 2147483000;
@@ -34,6 +41,64 @@
   box-shadow: 0 12px 40px rgba(0, 0, 0, .28);
   padding: 12px;
   border: 1px solid rgba(0, 0, 0, .06);
+}
+
+/* Dark theme for panel */
+#command-deck-panel.cd-theme-dark {
+  background: #000; /* full black */
+  color: #f1f1f1;
+  border-color: #222;
+  box-shadow: 0 12px 40px rgba(0,0,0,.7);
+}
+
+#command-deck-panel.cd-theme-dark #cd-tabs-wrap .cd-tab-btn,
+#command-deck-panel.cd-theme-dark #cd-settings-btn,
+#command-deck-panel.cd-theme-dark .cd-menu-item,
+#command-deck-panel.cd-theme-dark .cd-form input[type="text"],
+#command-deck-panel.cd-theme-dark .cd-form input[type="number"],
+#command-deck-panel.cd-theme-dark #cd-panel-selector select {
+  background: #111; /* near-black */
+  color: #eee;
+  border-color: #333;
+}
+
+#command-deck-panel.cd-theme-dark .cd-action { border-color: #222; }
+
+/* Dark mode: improve readability of labels and placeholders */
+#command-deck-panel.cd-theme-dark .cd-form label {
+  color: #cfcfcf;
+}
+
+#command-deck-panel.cd-theme-dark .cd-form input[type="text"],
+#command-deck-panel.cd-theme-dark .cd-form input[type="number"] {
+  caret-color: #fff;
+}
+
+#command-deck-panel.cd-theme-dark .cd-form input[type="text"]::placeholder,
+#command-deck-panel.cd-theme-dark .cd-form input[type="number"]::placeholder {
+  color: #9a9a9a;
+  opacity: 1; /* Ensure consistent placeholder contrast */
+}
+
+#command-deck-panel.cd-theme-dark #command-deck-output {
+  background: #0d0d0d;
+  color: #eee;
+}
+
+/* Theme toggle button */
+#cd-theme-toggle {
+  border: 1px solid #ddd;
+  background: #f9f9f9;
+  border-radius: 6px;
+  padding: 4px 8px;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+#command-deck-panel.cd-theme-dark #cd-theme-toggle {
+  background: #111827;
+  color: #e5e7eb;
+  border-color: #374151;
 }
 
 #command-deck-panel * {
@@ -91,6 +156,13 @@
   padding: 8px;
   z-index: 2147483001;
   min-width: 180px;
+}
+
+/* Dark theme for settings dropdown */
+#command-deck-panel.cd-theme-dark #cd-settings-panel {
+  background: #0d0d0d;
+  border-color: #333;
+  box-shadow: 0 10px 28px rgba(0,0,0,.6);
 }
 
 .cd-settings-title {
