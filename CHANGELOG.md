@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## [0.1.2] - 2025-09-11
+
+### Added
+
+- Support for Turbolinks.
+- Copy to clipboard button for results.
+- Toggle results visibility button.
+- Refactor overlay.js into multiple files.
+
 ## [0.1.1] - 2025-09-10
 
 ### Fixed
