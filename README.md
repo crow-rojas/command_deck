@@ -1,5 +1,7 @@
 # Command Deck
 
+![Demo](public/img/demo.gif)
+
 Command Deck is a tiny, dev-only Rails engine that gives you a floating panel to run custom actions and quick admin tasks without opening Rails console.
 
 You define panels/tabs/actions in a minimal DSL. Each action can declare a few params (text, boolean, number, selector), run Ruby code, and return a JSON-ish result shown in the UI.
