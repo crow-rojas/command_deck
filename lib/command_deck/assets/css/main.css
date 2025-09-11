@@ -324,6 +324,39 @@
   cursor: not-allowed;
 }
 
+/* ---------- Results Toolbar ---------- */
+#cd-result-wrap {
+  position: relative;
+  margin-top: 10px;
+  padding-top: 28px;
+  min-height: 28px;
+}
+
+.cd-result-toolbar {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: flex;
+  gap: 6px;
+  z-index: 1;
+}
+
+.cd-icon-btn {
+  border: 1px solid #ddd;
+  background: #f9f9f9;
+  border-radius: 6px;
+  padding: 2px 6px;
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1;
+}
+
+#command-deck-panel.cd-theme-dark .cd-icon-btn {
+  background: #111;
+  color: #eee;
+  border-color: #333;
+}
+
 #command-deck-output {
   white-space: pre-wrap;
   background: #0b102114;
