@@ -1,10 +1,10 @@
 # Command Deck
 
+Convenient, unobstrustive, dev-oriented Rails engine that allows you to run custom action and quick admin taskss through a floating panel without the need for opening Rails console.
+
+You define panels/tabs/actions with a minimal DSL. Each action can declare a few parameters (text, boolean, number, selector), run Ruby code, and return a JSON-ish result shown in the UI.
+
 ![Demo](public/img/demo.gif)
-
-Command Deck is a tiny, dev-only Rails engine that gives you a floating panel to run custom actions and quick admin tasks without opening Rails console.
-
-You define panels/tabs/actions in a minimal DSL. Each action can declare a few params (text, boolean, number, selector), run Ruby code, and return a JSON-ish result shown in the UI.
 
 ## Installation
 
@@ -13,17 +13,16 @@ Add the gem to your application:
 ```ruby
 # Gemfile (development only recommended)
 group :development do
-  gem "command_deck"
+  gem 'command_deck'
 end
 ```
 
-Mount the engine (dev only):
+Mount the engine:
 
 ```ruby
 # config/routes.rb
-if Rails.env.development?
-  mount CommandDeck::Engine => "/command_deck"
-end
+
+mount CommandDeck::Engine => '/command_deck' if Rails.env.development?
 ```
 
 Start your app and the floating panel should appear.
@@ -33,23 +32,23 @@ Start your app and the floating panel should appear.
 Create Ruby files in `app/command_deck/**/*.rb`. Example:
 
 ```ruby
-CommandDeck.panel "Utilities" do
-  tab "Demo" do
-    action "Greet", key: "utils.greet" do
-      param :name, :string, label: "Your name", required: true
+CommandDeck.panel 'Utilities' do
+  tab 'Demo' do
+    action 'Greet', key: 'utils.greet' do
+      param :name, :string, label: 'Your name', required: true
 
       perform do |p, _ctx|
         { message: "Hello, #{p[:name]}!" }
       end
     end
 
-    action "Pick a Color", key: "utils.color" do
+    action 'Pick a Color', key: 'utils.color' do
       # You can pass simple arrays, pairs, or hashes as choices
       param :color, :selector,
         options: [
-          ["Red",   "red"],
-          ["Green", "green"],
-          ["Blue",  "blue"]
+          ['Red',   'red'],
+          ['Green', 'green'],
+          ['Blue',  'blue']
         ],
         include_blank: true
 
@@ -61,7 +60,7 @@ CommandDeck.panel "Utilities" do
 end
 ```
 
-This will create a panel called "Utilities" with a tab called "Demo" and two actions: "Greet" and "Pick a Color".
+This will create a panel called `Utilities` with a tab called `Demo` and two actions: `Greet` and `Pick a Color`.
 
 ![Demo](public/img/demo.png)
 
@@ -112,7 +111,7 @@ Selector-specific options:
 - `return:` `:value` (default), `:label`, or `:both` (`{ label:, value: }`).
 - Choice shapes accepted:
   - Values: `%w[a b c]`
-  - Pairs: `[["Label A", "a"], ["Label B", "b"]]`
+  - Pairs: `[['Label A', 'a'], ['Label B', 'b']]`
   - Objects: `{ label:, value:, meta?: { ... } }`
 
 Action execution:

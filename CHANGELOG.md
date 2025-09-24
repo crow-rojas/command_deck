@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [0.1.3] - 2025-09-23
+
+- Unchilenizes the README file
+
 ## [0.1.2] - 2025-09-11
 
 ### Added
