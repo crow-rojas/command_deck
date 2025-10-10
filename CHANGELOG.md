@@ -1,5 +1,49 @@
 # CHANGELOG
 
+## [0.3.0] - 2025-10-10
+
+### Added
+
+- **Auto-discovery**: Panels can now be defined in any `command_deck` directory (e.g., `app/command_deck`, `packs/**/command_deck`)
+- **Automatic middleware insertion**: Middleware is now auto-injected when `COMMAND_DECK_ENABLED=true` in development
+- **Flexible namespacing**: Use any namespace that matches your project structure (e.g., `CommandDeck::Panels`, `DevTools::Panels`)
+
+### Changed
+
+- **Zero configuration required in application.rb**: No need to manually add autoload paths or middleware
+- Improved documentation with examples for modularized monoliths (packwerk/pack-rails)
+- Recommended gem group changed to `:development, :test` for better Sorbet/Tapioca compatibility
+
+### Migration from 0.2.0
+
+**Before (0.2.0):**
+
+```ruby
+# config/application.rb
+config.middleware.insert_after ActionDispatch::DebugExceptions, CommandDeck::Middleware if Rails.env.development?
+
+# app/command_deck/panels/global.rb
+module Panels
+  class Global < CommandDeck::BasePanel
+    # ...
+  end
+end
+```
+
+**After (0.3.0):**
+
+```ruby
+# config/application.rb - NO CONFIG NEEDED!
+# Just set COMMAND_DECK_ENABLED=true in your .env
+
+# app/command_deck/panels/global.rb
+module CommandDeck::Panels  # More descriptive namespace
+  class Global < CommandDeck::BasePanel
+    # ...
+  end
+end
+```
+
 ## [0.2.0] - 2025-10-09
 
 ### Breaking Changes

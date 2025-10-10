@@ -11,8 +11,8 @@ Define panels/tabs/actions with a minimal class-based DSL. Each action can decla
 Add the gem to your application:
 
 ```ruby
-# Gemfile (development only recommended)
-group :development do
+# Gemfile (development and test recommended for Sorbet/Tapioca)
+group :development, :test do
   gem 'command_deck'
 end
 ```
@@ -21,30 +21,30 @@ Mount the engine:
 
 ```ruby
 # config/routes.rb
-mount CommandDeck::Engine => '/command_deck' if Rails.env.development?
+mount CommandDeck::Engine => '/command_deck' if defined?(CommandDeck::Engine)
 ```
 
-Add middleware to inject the floating panel:
+Enable it in your development environment:
 
-```ruby
-# config/application.rb
-
-module YourApp
-  class Application < Rails::Application
-    # ... other config ...
-    
-    config.middleware.insert_after ActionDispatch::DebugExceptions, CommandDeck::Middleware if Rails.env.development?
-  end
-end
+```bash
+# .env.development.local (or your environment config)
+COMMAND_DECK_ENABLED=true
 ```
+
+**That's it!** The gem automatically:
+
+- Discovers panel files in `app/command_deck/**/*.rb` and `packs/**/command_deck/**/*.rb`
+- Adds them to autoload paths
+- Inserts middleware when `COMMAND_DECK_ENABLED=true` in development
+- Stays completely inactive in production
 
 ## Define actions
 
-Create panel classes in `app/command_deck/panels/*.rb`:
+Create panel classes anywhere under a `command_deck` directory. Use descriptive namespaces:
 
 ```ruby
 # app/command_deck/panels/utilities.rb
-module Panels
+module CommandDeck::Panels
   class Utilities < CommandDeck::BasePanel
     panel 'Utilities' do
       tab 'Demo' do
@@ -76,7 +76,29 @@ module Panels
 end
 ```
 
-This creates a panel with a tab and two actions. File path matches constant: `app/command_deck/panels/utilities.rb` → `Panels::Utilities`
+### For modularized monoliths (packwerk/pack-rails)
+
+You can organize panels within your packs:
+
+```ruby
+# packs/dev_tools/command_deck/panels/database.rb
+module DevTools::Panels
+  class Database < CommandDeck::BasePanel
+    panel 'Database Tools' do
+      tab 'Maintenance' do
+        action 'Rebuild Cache', key: 'db.rebuild_cache' do
+          perform do |_p, _ctx|
+            Rails.cache.clear
+            { ok: true, message: 'Cache cleared' }
+          end
+        end
+      end
+    end
+  end
+end
+```
+
+The gem auto-discovers panels in any `command_deck` directory under your app or packs. Use namespaces that match your project structure.
 
 ![Demo](public/img/demo.png)
 
