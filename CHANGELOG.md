@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [0.3.1] - 2025-10-10
+
+### Fixed
+
+- Fixed bugs related to the load of panels and middleware insertion.
+
 ## [0.3.0] - 2025-10-10
 
 ### Added

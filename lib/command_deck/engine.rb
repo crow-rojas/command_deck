@@ -9,7 +9,7 @@ module CommandDeck
     isolate_namespace CommandDeck
 
     initializer "command_deck.add_autoload_paths", before: :set_autoload_paths do |app|
-      discover_panel_paths.each do |path|
+      Engine.discover_panel_paths.each do |path|
         app.config.autoload_paths << path.to_s unless app.config.autoload_paths.include?(path.to_s)
       end
     end
@@ -27,27 +27,34 @@ module CommandDeck
       next unless Rails.env.development?
       next unless ENV.fetch("COMMAND_DECK_ENABLED", "false") == "true"
 
-      unless app.config.middleware.include?(CommandDeck::Middleware)
-        app.config.middleware.insert_after(
-          ActionDispatch::DebugExceptions,
-          CommandDeck::Middleware
-        )
-      end
+      app.config.middleware.insert_after(
+        ActionDispatch::DebugExceptions,
+        CommandDeck::Middleware
+      )
     end
 
     config.to_prepare do
       next unless Rails.env.development?
 
       CommandDeck::Registry.clear!
+
+      Engine.discover_panel_paths.each do |path|
+        Dir.glob(path.join("**/*.rb")).each do |file|
+          require_dependency file
+        rescue LoadError, NameError => e
+          Rails.logger.warn "[CommandDeck] Could not load panel #{file}: #{e.message}"
+        end
+      end
+
       CommandDeck.register_all_panels!
     end
 
     class << self
-      private
-
       def discover_panel_paths
         [discover_app_panels, discover_pack_panels].flatten.compact.uniq
       end
+
+      private
 
       def discover_app_panels
         path = Rails.root.join("app/command_deck")
@@ -58,7 +65,10 @@ module CommandDeck
         packs_path = Rails.root.join("packs")
         return [] unless packs_path.exist?
 
-        Dir.glob(packs_path.join("**/command_deck")).select { |dir| Pathname.new(dir).directory? }
+        Dir.glob(packs_path.join("**/command_deck")).each_with_object([]) do |dir, result|
+          path = Pathname.new(dir)
+          result << path if path.directory?
+        end
       end
     end
   end
