@@ -58,6 +58,33 @@ bundle exec rubocop -A
 - Provide steps to reproduce
 - Include relevant code samples
 
+## Releasing a New Version
+
+**Prerequisites:**
+
+- Update `lib/command_deck/version.rb` with the new version
+- Update `CHANGELOG.md` with changes
+- Commit all changes
+- Be on the `master` branch with a clean working directory
+
+**Release:**
+
+```bash
+bin/release
+```
+
+This script will:
+
+1. Run tests and RuboCop
+2. Build the gem
+3. Create a git tag
+4. Push to GitHub
+5. Publish to RubyGems
+
+**Manual steps after release:**
+
+- Create a GitHub release with the CHANGELOG content.
+
 ## Questions?
 
 Feel free to open an issue for questions or discussions.

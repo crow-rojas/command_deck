@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+set -euo pipefail
+IFS=$'\n\t'
+
+# Get the current version from version.rb
+VERSION=$(ruby -r ./lib/command_deck/version.rb -e 'puts CommandDeck::VERSION')
+
+echo "====================================="
+echo "Releasing command_deck v${VERSION}"
+echo "====================================="
+echo
+
+# Verify we're on master branch
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+if [ "$BRANCH" != "master" ]; then
+  echo "Error: You must be on the master branch to release"
+  exit 1
+fi
+
+# Verify working directory is clean
+if [ -n "$(git status --porcelain)" ]; then
+  echo "Error: Working directory is not clean. Commit or stash your changes first."
+  exit 1
+fi
+
+# Run tests
+echo "Running tests..."
+bundle exec rake test || { echo "Tests failed!"; exit 1; }
+echo
+
+# Run rubocop
+echo "Running rubocop..."
+bundle exec rubocop || { echo "RuboCop failed!"; exit 1; }
+echo
+
+# Build the gem
+echo "Building gem..."
+rm -f *.gem
+gem build command_deck.gemspec || { echo "Gem build failed!"; exit 1; }
+echo
+
+# Create git tag
+echo "Creating git tag v${VERSION}..."
+if git rev-parse "v${VERSION}" >/dev/null 2>&1; then
+  echo "Error: Tag v${VERSION} already exists"
+  exit 1
+fi
+git tag "v${VERSION}"
+echo
+
+# Push to GitHub
+echo "Pushing to GitHub..."
+git push origin master
+git push origin "v${VERSION}"
+echo
+
+# Push to RubyGems
+echo "Publishing to RubyGems..."
+gem push "command_deck-${VERSION}.gem"
+echo
+
+echo "====================================="
+echo "✅ Successfully released v${VERSION}"
+echo "====================================="
+echo
+echo "Next steps:"
+echo "1. Create a GitHub release at https://github.com/crow-rojas/command_deck/releases"
+echo "2. Wait a few minutes for the gem to appear on https://rubygems.org/gems/command_deck"
