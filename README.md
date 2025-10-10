@@ -1,8 +1,8 @@
 # Command Deck
 
-Convenient, unobstrustive, dev-oriented Rails engine that allows you to run custom action and quick admin taskss through a floating panel without the need for opening Rails console.
+Convenient, unobtrusive, dev-oriented Rails engine that allows you to run custom actions and quick admin tasks through a floating panel without opening the Rails console.
 
-You define panels/tabs/actions with a minimal DSL. Each action can declare a few parameters (text, boolean, number, selector), run Ruby code, and return a JSON-ish result shown in the UI.
+Define panels/tabs/actions with a minimal class-based DSL. Each action can declare parameters (text, boolean, number, selector), run Ruby code, and return a JSON result shown in the UI.
 
 ![Demo](public/img/demo.gif)
 
@@ -21,70 +21,80 @@ Mount the engine:
 
 ```ruby
 # config/routes.rb
-
 mount CommandDeck::Engine => '/command_deck' if Rails.env.development?
 ```
 
-Start your app and the floating panel should appear.
-
-## Define actions (DSL)
-
-Create Ruby files in `app/command_deck/**/*.rb`. Example:
+Add middleware to inject the floating panel:
 
 ```ruby
-CommandDeck.panel 'Utilities' do
-  tab 'Demo' do
-    action 'Greet', key: 'utils.greet' do
-      param :name, :string, label: 'Your name', required: true
+# config/application.rb
 
-      perform do |p, _ctx|
-        { message: "Hello, #{p[:name]}!" }
-      end
-    end
+module YourApp
+  class Application < Rails::Application
+    # ... other config ...
+    
+    config.middleware.insert_after ActionDispatch::DebugExceptions, CommandDeck::Middleware if Rails.env.development?
+  end
+end
+```
 
-    action 'Pick a Color', key: 'utils.color' do
-      # You can pass simple arrays, pairs, or hashes as choices
-      param :color, :selector,
-        options: [
-          ['Red',   'red'],
-          ['Green', 'green'],
-          ['Blue',  'blue']
-        ],
-        include_blank: true
+## Define actions
 
-      perform do |p, _ctx|
-        { chosen: p[:color] }
+Create panel classes in `app/command_deck/panels/*.rb`:
+
+```ruby
+# app/command_deck/panels/utilities.rb
+module Panels
+  class Utilities < CommandDeck::BasePanel
+    panel 'Utilities' do
+      tab 'Demo' do
+        action 'Greet', key: 'utils.greet' do
+          param :name, :string, label: 'Your name', required: true
+
+          perform do |p, _ctx|
+            { message: "Hello, #{p[:name]}!" }
+          end
+        end
+
+        action 'Pick a Color', key: 'utils.color' do
+          # You can pass simple arrays, pairs, or hashes as choices
+          param :color, :selector,
+            options: [
+              ['Red',   'red'],
+              ['Green', 'green'],
+              ['Blue',  'blue']
+            ],
+            include_blank: true
+
+          perform do |p, _ctx|
+            { chosen: p[:color] }
+          end
+        end
       end
     end
   end
 end
 ```
 
-This will create a panel called `Utilities` with a tab called `Demo` and two actions: `Greet` and `Pick a Color`.
+This creates a panel with a tab and two actions. File path matches constant: `app/command_deck/panels/utilities.rb` → `Panels::Utilities`
 
 ![Demo](public/img/demo.png)
 
 ## DSL API
 
-Define panels under `app/command_deck/**/*.rb`.
-
-```ruby
-CommandDeck.panel(title, owner: nil, group: nil, key: nil) { ... }
-```
-
-Inside a panel, define tabs:
+Panels inherit from `CommandDeck::BasePanel`. Define tabs within a panel:
 
 ```ruby
 tab(title) { ... }
 ```
 
-Inside a tab, define actions:
+Define actions within a tab:
 
 ```ruby
 action(title, key:) { ... }
 ```
 
-Inside an action, declare params and the code to run:
+Declare params and execution logic within an action:
 
 ```ruby
 param(name, type, **opts)
@@ -114,14 +124,11 @@ Selector-specific options:
   - Pairs: `[['Label A', 'a'], ['Label B', 'b']]`
   - Objects: `{ label:, value:, meta?: { ... } }`
 
-Action execution:
-
-- The block `perform { |params, ctx| ... }` receives your coerced params and a context hash (reserved for future use).
-- Return any object serializable to JSON (Hash recommended) to show it in the UI.
+The `perform` block receives coerced params and a context hash. Return any JSON-serializable object (Hash recommended).
 
 ## Security
 
-Command Deck is intended for development only. The engine mounts only in dev and skips CSRF by default. **DO NOT ENABLE IT IN PRODUCTION**.
+Intended for development only. **DO NOT ENABLE IN PRODUCTION**.
 
 ## Development
 

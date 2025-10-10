@@ -8,10 +8,12 @@ class ExecutorTest < Minitest::Test
       { name: :flag, type: :boolean }
     ]
     out = CommandDeck::Executor.coerce(schema, { "flag" => "true" })
-    assert_equal true, out[:flag]
+
+    assert out[:flag]
 
     out = CommandDeck::Executor.coerce(schema, { flag: "0" })
-    assert_equal false, out[:flag]
+
+    refute out[:flag]
   end
 
   def test_integer_coercion
@@ -19,9 +21,11 @@ class ExecutorTest < Minitest::Test
       { name: :count, type: :integer }
     ]
     out = CommandDeck::Executor.coerce(schema, { count: "42" })
+
     assert_equal 42, out[:count]
 
     out = CommandDeck::Executor.coerce(schema, { count: "" })
+
     assert_nil out[:count]
   end
 
@@ -32,10 +36,12 @@ class ExecutorTest < Minitest::Test
 
     # value only
     out = CommandDeck::Executor.coerce(schema, { sel: 123 })
+
     assert_equal 123, out[:sel]
 
     # object with label+value should symbolize keys
     out = CommandDeck::Executor.coerce(schema, { sel: { "label" => "Foo", "value" => 7 } })
+
     assert_equal({ label: "Foo", value: 7 }, out[:sel])
   end
 end

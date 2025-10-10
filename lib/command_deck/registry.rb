@@ -96,8 +96,4 @@ module CommandDeck
       end
     end
   end
-
-  def self.panel(title, ...)
-    Registry.panel(title, ...)
-  end
 end
