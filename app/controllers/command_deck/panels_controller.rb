@@ -65,7 +65,8 @@ module CommandDeck
         name: param[:name],
         type: param[:type].to_s,
         label: param[:label] || param[:name].to_s.tr("_", " ").capitalize,
-        required: param.key?(:required) ? param[:required] : false
+        required: param.key?(:required) ? param[:required] : false,
+        auto_populate: param.key?(:auto_populate) ? param[:auto_populate] : false
       }
     end
 

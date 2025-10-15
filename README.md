@@ -70,6 +70,26 @@ module CommandDeck::Panels
             { chosen: p[:color] }
           end
         end
+
+        action 'Update Setting', key: 'utils.update_setting' do
+          # Selector with current values in meta
+          param :setting_name, :selector,
+            collection: -> {
+              # Example: fetch settings with current values
+              [
+                { label: 'Max Users (100)', value: 'max_users', meta: { value: 100 } },
+                { label: 'Timeout (30)', value: 'timeout', meta: { value: 30 } }
+              ]
+            }
+
+          # Auto-populate this input with the value from meta
+          param :new_value, :string, required: true, auto_populate: true
+
+          perform do |p, _ctx|
+            # Update the setting with new value
+            { ok: true, setting: p[:setting_name], new_value: p[:new_value] }
+          end
+        end
       end
     end
   end
@@ -134,6 +154,7 @@ Common param options:
 
 - `label:` String – UI label. Defaults to a humanized `name`.
 - `required:` true/false – disables Run button until filled. Default: false.
+- `auto_populate:` true/false – for text/number inputs, automatically populate with value from previous selector's `meta: { value: ... }`. Default: false.
 
 Selector-specific options:
 

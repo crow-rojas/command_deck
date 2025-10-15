@@ -1,5 +1,24 @@
 # CHANGELOG
 
+## [0.3.2] - 2025-10-15
+
+### Added
+
+- **Auto-populate feature**: New `auto_populate: true` option for params that automatically fills text/number inputs with values from selector meta data
+- **Dark mode support**: Panel selector now properly respects dark theme settings
+- **Form accessibility improvements**: All form inputs now have proper `id`, `name`, `for`, and `autocomplete` attributes for better accessibility and browser compatibility
+
+### Fixed
+
+- **Dropdown text overflow**: Long labels in selectors are now properly truncated (50 chars for action params, 35 chars for panel selector) with full text shown on hover
+- **Select2 conflict prevention**: Added `data-select-type="default"` to prevent third-party select enhancement libraries from interfering with Command Deck selectors
+- **CSS cascade issues**: Fixed dark mode styles not applying due to CSS specificity problems
+
+### Changed
+
+- **DRY code improvements**: Extracted label truncation logic into shared `truncateLabel()` utility function in `core/dom.js`
+- Better hint display: "Current:" hints now only show for boolean values (ON/OFF badges), while string values are populated directly in inputs
+
 ## [0.3.1] - 2025-10-10
 
 ### Fixed
