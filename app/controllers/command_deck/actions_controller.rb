@@ -6,7 +6,7 @@ module CommandDeck
     def create
       key = params[:key].to_s
       begin
-        result = Executor.call(key: key, params: params[:params])
+        result = Executor.call(key: key, params: params[:params], request: request)
         render json: { ok: true, result: result }
       rescue ArgumentError => e
         render json: { ok: false, error: e.message }, status: :not_found

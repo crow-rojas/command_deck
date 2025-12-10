@@ -3,12 +3,13 @@
 module CommandDeck
   # Executor for running actions
   class Executor
-    def self.call(key:, params:)
+    def self.call(key:, params:, request: nil)
       action = Registry.find_action(key)
       raise ArgumentError, "Unknown action #{key}" unless action
 
       coerced = coerce(action.params, params || {})
-      action.block.call(coerced, {})
+      ctx = request ? CommandDeck.configuration.build_context(request) : {}
+      action.block.call(coerced, ctx)
     end
 
     def self.coerce(schema, raw)

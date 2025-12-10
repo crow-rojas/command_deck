@@ -169,6 +169,44 @@ Selector-specific options:
 
 The `perform` block receives coerced params and a context hash. Return any JSON-serializable object (Hash recommended).
 
+## Context Provider
+
+The `ctx` parameter in perform blocks is populated via a configurable context provider. This allows you to inject application-specific context like the current user:
+
+```ruby
+# config/initializers/command_deck.rb
+CommandDeck.configure do |config|
+  config.context_provider = ->(request) do
+    {
+      current_user: request.env['warden']&.user,  # Works with Devise
+      session: request.session,
+      # Add any other context your actions need
+    }
+  end
+end
+```
+
+Then in your panels:
+
+```ruby
+action 'Toggle Admin', key: 'user.toggle_admin' do
+  perform do |_params, ctx|
+    user = ctx[:current_user]
+    return { error: 'Not logged in' } unless user
+
+    user.update!(admin: !user.admin?)
+    { ok: true, admin: user.admin? }
+  end
+end
+```
+
+The context provider receives the full `ActionDispatch::Request` object, giving you access to:
+
+- `request.env['warden']` - Warden/Devise user
+- `request.session` - Rails session
+- `request.cookies` - Request cookies
+- `request.env` - Full Rack environment
+
 ## Security
 
 Intended for development only. **DO NOT ENABLE IN PRODUCTION**.
