@@ -17,7 +17,7 @@
   align-items: center;
   justify-content: center;
   font: 600 14px system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, .25);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
   cursor: pointer;
 }
 
@@ -25,7 +25,7 @@
 #command-deck-toggle.cd-theme-dark {
   background: #000; /* full black */
   color: #fff;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, .6);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
 }
 
 #command-deck-panel {
@@ -38,9 +38,9 @@
   background: #fff;
   color: #111;
   border-radius: 12px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, .28);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.28);
   padding: 12px;
-  border: 1px solid rgba(0, 0, 0, .06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 /* Dark theme for panel */
@@ -48,7 +48,7 @@
   background: #000; /* full black */
   color: #f1f1f1;
   border-color: #222;
-  box-shadow: 0 12px 40px rgba(0,0,0,.7);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7);
 }
 
 #command-deck-panel.cd-theme-dark #cd-tabs-wrap .cd-tab-btn,
@@ -62,7 +62,9 @@
   border-color: #333;
 }
 
-#command-deck-panel.cd-theme-dark .cd-action { border-color: #222; }
+#command-deck-panel.cd-theme-dark .cd-action {
+  border-color: #222;
+}
 
 /* Dark mode: improve readability of labels and placeholders */
 #command-deck-panel.cd-theme-dark .cd-form label {
@@ -102,7 +104,8 @@
 }
 
 #command-deck-panel * {
-  font: 500 13px/1.35 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font: 500 13px/1.35 system-ui, -apple-system, Segoe UI, Roboto, Arial,
+    sans-serif;
 }
 
 /* ---------- Header & Settings ---------- */
@@ -168,7 +171,7 @@
   background: #fff;
   border: 1px solid #e5e5e5;
   border-radius: 8px;
-  box-shadow: 0 10px 28px rgba(0,0,0,.12);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
   padding: 8px;
   z-index: 2147483001;
   min-width: 180px;
@@ -178,7 +181,7 @@
 #command-deck-panel.cd-theme-dark #cd-settings-panel {
   background: #0d0d0d;
   border-color: #333;
-  box-shadow: 0 10px 28px rgba(0,0,0,.6);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.6);
 }
 
 .cd-settings-title {
@@ -227,6 +230,8 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  max-height: 50vh;
+  overflow-y: auto;
 }
 
 .cd-action {
@@ -309,18 +314,18 @@
   border: 1px solid #fecaca;
 }
 
-#command-deck-panel.cd-theme-dark .cd-param-hint { 
-    color: #bdbdbd;
+#command-deck-panel.cd-theme-dark .cd-param-hint {
+  color: #bdbdbd;
 }
-#command-deck-panel.cd-theme-dark .cd-badge.cd-on { 
-    background: #0b2f1c; 
-    color: #a7f3d0; 
-    border-color: #065f46; 
+#command-deck-panel.cd-theme-dark .cd-badge.cd-on {
+  background: #0b2f1c;
+  color: #a7f3d0;
+  border-color: #065f46;
 }
-#command-deck-panel.cd-theme-dark .cd-badge.cd-off { 
-    background: #3b0c0c; 
-    color: #fecaca; 
-    border-color: #7f1d1d; 
+#command-deck-panel.cd-theme-dark .cd-badge.cd-off {
+  background: #3b0c0c;
+  color: #fecaca;
+  border-color: #7f1d1d;
 }
 
 .cd-form .cd-run {
