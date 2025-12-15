@@ -1,5 +1,22 @@
 # CHANGELOG
 
+## [0.3.3] - 2025-12-15
+
+### Added
+
+- **Configurable context provider**: New `CommandDeck.configure` block allows injecting application context (current user, session, etc.) into action `perform` blocks via the `ctx` parameter
+- **Loading spinner**: Actions now display a spinner animation while running
+- **Full test coverage**: Comprehensive Minitest suite achieving 100% line coverage and 97.73% branch coverage
+
+### Fixed
+
+- **Panel hot-reload**: Changed from `require_dependency` to `load` for more reliable panel reloading in development, also catches `SyntaxError` for better error reporting
+- **Large panels overflow**: Added max-height and scrollbar support for panels with many actions
+
+### Changed
+
+- Relaxed RuboCop metrics for test files to allow comprehensive test methods
+
 ## [0.3.2] - 2025-10-15
 
 ### Added
