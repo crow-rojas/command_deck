@@ -19,3 +19,22 @@ Style/StringLiterals:
 
 Style/StringLiteralsInInterpolation:
   EnforcedStyle: double_quotes
+
+Metrics/MethodLength:
+  Exclude:
+    - "test/**/*"
+
+Metrics/ClassLength:
+  Exclude:
+    - "test/**/*"
+
+Metrics/AbcSize:
+  Exclude:
+    - "test/**/*"
+
+Minitest/MultipleAssertions:
+  Enabled: false
+
+Lint/EmptyBlock:
+  Exclude:
+    - "test/**/*"
