@@ -40,8 +40,8 @@ module CommandDeck
 
       Engine.discover_panel_paths.each do |path|
         Dir.glob(path.join("**/*.rb")).each do |file|
-          require_dependency file
-        rescue LoadError, NameError => e
+          load file
+        rescue LoadError, SyntaxError, NameError => e
           Rails.logger.warn "[CommandDeck] Could not load panel #{file}: #{e.message}"
         end
       end
