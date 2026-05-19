@@ -9,6 +9,8 @@ module CommandDeck
     isolate_namespace CommandDeck
 
     initializer "command_deck.add_autoload_paths", before: :set_autoload_paths do |app|
+      next unless ENV.fetch("COMMAND_DECK_ENABLED", "false") == "true"
+
       Engine.discover_panel_paths.each do |path|
         app.config.autoload_paths << path.to_s unless app.config.autoload_paths.include?(path.to_s)
       end
